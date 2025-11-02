@@ -1,0 +1,112 @@
+<?php $this->start("page_specific_css") ?>
+<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.2/r-3.0.5/sp-2.3.4/datatables.min.css" rel="stylesheet" integrity="sha384-nr2HNI1xgpaxEmc/HsSP/DR+eSV9xHkv8HVNcK9ydju/T9AP5e7WvMyfskuiENc7" crossorigin="anonymous">
+<?php $this->stop() ?>
+
+<!-- User's URLs List -->
+<?php if (!empty($urls)): ?>
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0"><i class="fas fa-list me-2"></i>Your Shortened URLs</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="urlsTable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Short URL</th>
+                                <th>Original URL</th>
+                                <th>Tags</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($urls as $url): ?>
+                                <tr>
+                                    <td>
+                                        <a href="/<?= $this->e($url->shortSlug) ?>"
+                                            target="_blank"
+                                            class="text-decoration-none">
+                                            <?= $this->e($url->getFullShortUrl()) ?>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-secondary ms-2"
+                                            onclick="copyToClipboard(event, '<?= $this->e($url->getFullShortUrl()) ?>')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 200px;"
+                                            title="<?= $this->e($url->longUrl) ?>">
+                                            <?= $this->e($url->longUrl) ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($url->tags)): ?>
+                                            <?php foreach ($url->tags as $tag): ?>
+                                                <span class="badge bg-secondary me-1"><?= $this->e($tag->name) ?></span>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <span class="text-muted">No tags</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= date('M j, Y', strtotime($url->createdAt)) ?></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="card shadow">
+                <div class="card-body">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No shortened URLs yet</h5>
+                    <p class="text-muted">Start by shortening your first URL above!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php $this->start("page_specific_js") ?>
+<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.2/r-3.0.5/sp-2.3.4/datatables.min.js" integrity="sha384-wfP/If1m8lEtZeg/oZadbMmyCTfHKbV1zUtkIXBivvPKvAXOk6YN4ToytksJCuJz" crossorigin="anonymous"></script>
+<script>
+    let table = new DataTable('#urlsTable', {
+        responsive: true,
+        pagingType: 'simple_numbers'
+    });
+
+    function copyToClipboard(event, text) {
+        navigator.clipboard.writeText(text).then(function() {
+            // Show a temporary success message
+            const button = event.target.closest('button');
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-success');
+
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-secondary');
+            }, 1000);
+        });
+    }
+</script>
+<?php $this->stop() ?>
+

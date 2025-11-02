@@ -1,0 +1,70 @@
+<button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+    data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">Toggle Dropdown</span>
+</button>
+<ul class="dropdown-menu">
+    <li><a class="dropdown-item">
+            <i class="fas fa-edit me-2"></i>Edit Tag
+        </a></li>
+    <li>
+        <hr class="dropdown-divider">
+    </li>
+    <li><a class="dropdown-item text-danger">
+            <i class="fas fa-trash me-2"></i>Delete Tag
+        </a></li>
+</ul>
+
+
+
+
+
+<!-- Edit Tag Modal -->
+<div class="modal fade" id="editTagModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Tag</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/update-tag" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editTagId">
+                    <div class="mb-3">
+                        <label for="editTagName" class="form-label">Tag Name</label>
+                        <input type="text" class="form-control" id="editTagName" name="name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Tag</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Tag Modal -->
+<div class="modal fade" id="deleteTagModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Tag</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the tag "<span id="deleteTagName"></span>"?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This will remove this tag from all URLs that use it.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/delete-tag" method="POST" style="display: inline;">
+                    <input type="hidden" name="id" id="deleteTagId">
+                    <button type="submit" class="btn btn-danger">Delete Tag</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
