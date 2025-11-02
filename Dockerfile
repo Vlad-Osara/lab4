@@ -1,10 +1,12 @@
-# Dùng image PHP 8.2 với Apache
+# Sử dụng image PHP có Apache sẵn
 FROM php:8.2-apache
 
-# Cài extension PostgreSQL
-RUN docker-php-ext-install pdo pdo_pgsql
+# Cài thư viện cần thiết để build pdo_pgsql
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
-# Copy toàn bộ source code vào thư mục web của Apache
+# Copy mã nguồn vào thư mục web của Apache
 COPY . /var/www/html/
 
 # Mở port 80
