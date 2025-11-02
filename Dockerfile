@@ -1,15 +1,22 @@
-# Sử dụng image PHP có Apache sẵn
+# Sử dụng image PHP có Apache
 FROM php:8.2-apache
 
-# Cài thư viện cần thiết để build pdo_pgsql
+# Cài lib cần thiết và composer
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql
+    libpq-dev unzip \
+    && docker-php-ext-install pdo pdo_pgsql \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && rm composer-setup.php
 
-# Copy toàn bộ project
+# Copy toàn bộ mã nguồn
 COPY . /var/www/html/
 
-# Thay đổi DocumentRoot sang /var/www/html/public
+# Cài đặt thư viện PHP qua composer
+WORKDIR /var/www/html
+RUN composer install --no-dev --optimize-autoloader
+
+# (Nếu index nằm trong public/)
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Mở port 80
