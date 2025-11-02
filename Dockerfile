@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_pgsql
 
 # Copy mã nguồn vào thư mục web của Apache
-COPY . /var/www/html/
+COPY public/ /var/www/html/
 
 # Mở port 80
 EXPOSE 80
